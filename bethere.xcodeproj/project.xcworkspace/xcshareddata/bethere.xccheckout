@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>048D1F5F-A823-4948-93DC-FE3AA8DCFBE5</string>
+	<key>IDESourceControlProjectName</key>
+	<string>bethere</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>135B7380-080D-40B0-BB10-55EC64041B0D</key>
+		<string>https://github.com/hoangha052/APP_BETHERE.git</string>
+		<key>D971E9E4-26C5-4504-9625-8B73E4FFCAB6</key>
+		<string>https://github.com/hoangha052/appbethere.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>bethere.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>135B7380-080D-40B0-BB10-55EC64041B0D</key>
+		<string>../..</string>
+		<key>D971E9E4-26C5-4504-9625-8B73E4FFCAB6</key>
+		<string>../../BeThere</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/hoangha052/APP_BETHERE.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>135B7380-080D-40B0-BB10-55EC64041B0D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>135B7380-080D-40B0-BB10-55EC64041B0D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>APP_BETHERE</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D971E9E4-26C5-4504-9625-8B73E4FFCAB6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BeThere</string>
+		</dict>
+	</array>
+</dict>
+</plist>
