@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>7EFFCA37-9026-4531-9AD1-B1A417BFF673</string>
+	<key>IDESourceControlProjectName</key>
+	<string>bethere</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>81EDAFD6-B93D-4E96-AB6C-1956CE9026F5</key>
+		<string>https://github.com/hoangha052/projectbethere.git</string>
+		<key>D971E9E4-26C5-4504-9625-8B73E4FFCAB6</key>
+		<string>https://github.com/hoangha052/appbethere.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>bethere.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>81EDAFD6-B93D-4E96-AB6C-1956CE9026F5</key>
+		<string>../..</string>
+		<key>D971E9E4-26C5-4504-9625-8B73E4FFCAB6</key>
+		<string>../../BeThere</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/hoangha052/projectbethere.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>81EDAFD6-B93D-4E96-AB6C-1956CE9026F5</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D971E9E4-26C5-4504-9625-8B73E4FFCAB6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BeThere</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>81EDAFD6-B93D-4E96-AB6C-1956CE9026F5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>projectbethere</string>
+		</dict>
+	</array>
+</dict>
+</plist>
