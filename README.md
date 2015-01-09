@@ -1,2 +1,0 @@
-# projectbethere
-app for bethere
