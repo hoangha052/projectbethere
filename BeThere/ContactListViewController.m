@@ -75,13 +75,13 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 - (void)loadData
 {
     /*Fution send request add friend*/
-//    NSArray *friends = [Friends entitiesWithValue:self.userInfo.userName forKey:@"myName" fault:NO];
-//    if (friends.count > 0) {
-//       friends = [friends valueForKey:@"friendName"];
-//    }
+    NSArray *friends = [Friends entitiesWithValue:self.userInfo.userName forKey:@"myName" fault:NO];
+    if (friends.count > 0) {
+       friends = [friends valueForKey:@"friendName"];
+    }
 //    NSLog(@"Friend list %@", friends);
     PFQuery *query = [PFQuery queryWithClassName:@"_User"];
-//    [query whereKey:@"username" containedIn:friends];
+    [query whereKey:@"username" containedIn:friends];
     self.userArray = [query findObjects];
     self.userArray = [self.userArray filteredArrayUsingPredicate:[NSPredicate predicateWithValueNotEqual:self.userInfo.userName forKey:@"username"]];
     self.contactArray = [NSMutableArray arrayWithCapacity:[self.userArray count]];
