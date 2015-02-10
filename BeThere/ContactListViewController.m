@@ -172,7 +172,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
         [alertView show];
     }
     else
-    {
+    { 
         [self performSegueWithIdentifier:kSegue_MapViewController  sender:self];
     }
 }
