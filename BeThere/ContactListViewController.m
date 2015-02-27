@@ -28,10 +28,10 @@
 UIActionSheetDelegate, UIImagePickerControllerDelegate
 , UINavigationControllerDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *profilePhotoView;
-@property (weak, nonatomic) IBOutlet UILabel *lblName;
 @property (weak, nonatomic) IBOutlet UIButton *btnAddContact;
 @property (weak, nonatomic) IBOutlet UITableView *tableUserView;
 @property (weak, nonatomic) IBOutlet UIView *viewImage;
+@property (weak, nonatomic) IBOutlet UITextField *txtName;
 @property (strong, nonatomic) NSArray *userArray;
 @property (strong, nonatomic) NSMutableArray *contactArray;
 @property (strong, nonatomic)  LoginInfo *userInfo;
@@ -57,7 +57,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     self.viewImage.layer.cornerRadius = 40;
     self.userInfo = [LoginInfo sharedObject];
     self.userInfo.reply = NO;
-    self.lblName.text = self.userInfo.userName;
+    self.txtName.text = self.userInfo.userName;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         PFUser *user = [PFUser currentUser];
         PFFile *theImage = user[@"image"];
@@ -75,6 +75,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 - (void)loadData
 {
     /*Fution send request add friend*/
+//    NSArray *friends = [Friends entitiesWithValue:self.userInfo.userName forKey:@"myName" fault:NO];
 //    NSArray *friends = [Friends entitiesWithValue:self.userInfo.userName forKey:@"myName" fault:NO];
 //    if (friends.count > 0) {
 //       friends = [friends valueForKey:@"friendName"];
@@ -182,6 +183,15 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     alert.tag = 200;
     [alert show];
+}
+
+- (IBAction) btnEditNamePress:(id)sender {
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Are you sure you want to change username ?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    PFUser *user = [PFUser currentUser];
+    [user setObject:self.txtName.text forKey:@"username"];
+    [user saveInBackground];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Username changed successfully" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [alertView show];
 }
 
 - (IBAction)viewMessagePress:(id)sender {
