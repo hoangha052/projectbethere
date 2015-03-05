@@ -236,24 +236,21 @@
     return YES;
 }
 
+// http://stackoverflow.com/questions/7199832/i-need-a-dead-simple-implementation-of-mkcircle-overlay
 - (IBAction)changeRadiusValue:(id)sender {
     UISlider *slider = (UISlider *)sender;
     self.radiusValue = slider.value - 75;
     self.radiusValueLabel.text = [NSString stringWithFormat:@"%0.0f m",slider.value];
-//    MKCircle *circle = [MKCircle circleWithCenterCoordinate:self.coordiante radius:self.radiusValue];
-    
-    [self.UIMapView addOverlay:[MKCircle circleWithCenterCoordinate:self.coordiante radius:self.radiusValue]];
+    [self.UIMapView removeOverlays:self.UIMapView.overlays];
+    MKCircle *circle = [MKCircle circleWithCenterCoordinate:self.coordiante radius:self.radiusValue];
+    [self.UIMapView addOverlay:circle];
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)map viewForOverlay:(id <MKOverlay>)overlay
 {
-    CircleView *circleView = [[CircleView alloc] initWithCircle:(MKCircle *)overlay];
-    [circleView start];
-//    CircleView *circleView = [[CircleView alloc] initWithOverlay:overlay];
-//    [circleView start];
-//    circleView.strokeColor = [UIColor redColor];
-//    circleView.fillColor = [[UIColor blueColor] colorWithAlphaComponent:0.6];
-    return circleView ;
+    MKCircleView *circleView = [[MKCircleView alloc] initWithCircle:(MKCircle *)overlay];
+    circleView.fillColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
+    return circleView;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error

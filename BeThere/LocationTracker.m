@@ -19,6 +19,22 @@
 
 #define IS_OS_8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
 
+#ifdef TARGET_IPHONE_SIMULATOR
+
+//@interface CLLocationManager (Simulator)
+//@end
+//
+//@implementation CLLocationManager (Simulator)
+//
+//-(void)startUpdatingLocation {
+//    CLLocation *powellsTech = [[CLLocation alloc] initWithLatitude:10.779163 longitude:106.689401];
+//    [self.delegate locationManager:self didUpdateLocations:[[NSArray alloc] initWithObjects:powellsTech,nil]];
+//}
+//
+//@end
+
+#endif // TARGET_IPHONE_SIMULATOR
+
 @interface LocationTracker()
 @property (strong, nonatomic) NSDate *updateDate;
 @end
