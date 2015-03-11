@@ -21,11 +21,12 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *locationUser;
 @property (strong, nonatomic) PFGeoPoint *curentPoint;
-@property (strong, nonatomic) IBOutlet MKMapView *UIMapView;
+@property (strong, nonatomic) IBOutlet MKMapView *mapview;
 @property (weak, nonatomic) IBOutlet UILabel *radiusValueLabel;
+@property (weak, nonatomic) IBOutlet UISlider *radius_slider;
 @property (nonatomic) NSInteger radiusValue;
 @property (weak, nonatomic) IBOutlet UITextField *textFieldRadius;
-@property (assign, nonatomic) CLLocationCoordinate2D coordiante;
+@property (assign, nonatomic) CLLocationCoordinate2D coordinate;
 @property (strong, nonatomic) UIImageView *imageView;
 @property (copy, nonatomic) NSString *stringImage;
 @property (strong, nonatomic) LoginInfo *loginInfo;
@@ -62,8 +63,8 @@
 
 
 - (IBAction)btnBetherePress:(id)sender {
-    if ([self.UIMapView.annotations count] > 0) {
-        MKPointAnnotation *point = [self.UIMapView.annotations lastObject];
+    if ([self.mapview.annotations count] > 0) {
+        MKPointAnnotation *point = [self.mapview.annotations lastObject];
         CLLocation* locationUser = [[CLLocation alloc] initWithLatitude:point.coordinate.latitude longitude:point.coordinate.longitude];
         PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLocation:locationUser];
         [self sendLocation:geoPoint];
@@ -104,38 +105,37 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]]];
-    self.radiusValue = 25;
+    self.radiusValue = 10;
     self.stringImage = @"symbol-1";
     self.loginInfo = [LoginInfo sharedObject];
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.UIMapView.showsUserLocation = YES;
-    self.UIMapView.delegate = self;
+    self.mapview.showsUserLocation = YES;
+    self.mapview.delegate = self;
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(foundTap:)];
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.numberOfTouchesRequired = 1;
     
-    [self.UIMapView addGestureRecognizer:tapRecognizer];
+    [self.mapview addGestureRecognizer:tapRecognizer];
 }
 
+//https://gist.github.com/a1phanumeric/2249553
 -(IBAction)foundTap:(UITapGestureRecognizer *)recognizer
 {
-    [self.UIMapView removeAnnotations:self.UIMapView.annotations];
-    CGPoint point = [recognizer locationInView:self.UIMapView];
-    self.coordiante = [self.UIMapView convertPoint:point toCoordinateFromView:self.view];
+    [self.mapview removeAnnotations:self.mapview.annotations];
+    CGPoint point = [recognizer locationInView:self.mapview];
+    self.coordinate = [self.mapview convertPoint:point toCoordinateFromView:self.mapview];
     
     
     MKPointAnnotation *point1 = [[MKPointAnnotation alloc] init];
-    point1.coordinate = self.coordiante;
+    point1.coordinate = self.coordinate;
     
-    MyCustomAnnotation *pointAnnotation = [[MyCustomAnnotation alloc] initWithLocation:self.coordiante];
-    [self.UIMapView addAnnotation:pointAnnotation];
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(self.coordiante, 100 , 100);
-//    MKCoordinateSpan span = MKCoordinateSpanMake(.2, .2);
-//    MKCoordinateRegion region = MKCoordinateRegionMake(self.coordiante, span);
-//    MKCoordinateRegion viewRegionStatus = [self.UIMapView regionThatFits:region];
-    
-    [self.UIMapView  setRegion:viewRegion animated:YES];
+    MyCustomAnnotation *pointAnnotation = [[MyCustomAnnotation alloc] initWithLocation:self.coordinate];
+    [self.mapview addAnnotation:pointAnnotation];
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(self.coordinate, self.radiusValue * 10,self.radiusValue * 10);
+    [self.mapview setRegion:viewRegion animated:YES];
+
+    [self changeRadiusValue:self.radius_slider];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView
@@ -143,7 +143,7 @@
 {
     static NSString *identifier = @"MyCustomAnnotation";
     if ([annotation isKindOfClass:[MyCustomAnnotation class]]) {
-        CustomAnnotationView *annotationView = (CustomAnnotationView *) [self.UIMapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        CustomAnnotationView *annotationView = (CustomAnnotationView *) [self.mapview dequeueReusableAnnotationViewWithIdentifier:identifier];
         if (annotationView == nil) {
             annotationView = [[CustomAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
             annotationView.enabled = YES;
@@ -200,7 +200,7 @@
     span.latitudeDelta = radius / 112.0;
     MKCoordinateRegion region = MKCoordinateRegionMake( location.coordinate, span);
     
-    [self.UIMapView setRegion:region animated:NO];
+    [self.mapview setRegion:region animated:NO];
     
     // Create the search request
     MKLocalSearchRequest *localSearchRequest = [[MKLocalSearchRequest alloc] init];
@@ -224,7 +224,7 @@
 //                    annotation.coordinate = mapItem.placemark.coordinate;
 //                    annotation.title = mapItem.name;
                 MyCustomAnnotation *pointAnnotation = [[MyCustomAnnotation alloc] initWithLocation:mapItem.placemark.coordinate];
-                    [self.UIMapView addAnnotation:pointAnnotation];
+                    [self.mapview addAnnotation:pointAnnotation];
             }
         }
     }];
@@ -239,11 +239,11 @@
 // http://stackoverflow.com/questions/7199832/i-need-a-dead-simple-implementation-of-mkcircle-overlay
 - (IBAction)changeRadiusValue:(id)sender {
     UISlider *slider = (UISlider *)sender;
-    self.radiusValue = slider.value - 75;
+    self.radiusValue = slider.value;
     self.radiusValueLabel.text = [NSString stringWithFormat:@"%0.0f m",slider.value];
-    [self.UIMapView removeOverlays:self.UIMapView.overlays];
-    MKCircle *circle = [MKCircle circleWithCenterCoordinate:self.coordiante radius:self.radiusValue];
-    [self.UIMapView addOverlay:circle];
+    [self.mapview removeOverlays:self.mapview.overlays];
+    MKCircle *circle = [MKCircle circleWithCenterCoordinate:self.coordinate radius:self.radiusValue];
+    [self.mapview addOverlay:circle];
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)map viewForOverlay:(id <MKOverlay>)overlay
