@@ -75,8 +75,6 @@
 }
 
 - (IBAction)btnLoginPress:(id)sender {
-    //    [self performSegueWithIdentifier:kSegue_ContactListViewController sender:_tfUserName.text];
-    
     [PFUser logInWithUsernameInBackground:_tfUserName.text  password:_tfPassword.text
                                     block:^(PFUser *user, NSError *error) {
                                         if (user) {
@@ -89,7 +87,7 @@
                                             saveLogin.userName = user.username;
                                             saveLogin.password = user.password;
                                             saveLogin.userEmail = user.email;
-                                            
+
                                             // Do stuff after successful login.
                                             [self performSegueWithIdentifier:kSegue_ContactListViewController sender:self];
                                             
@@ -170,6 +168,20 @@
 {
     // Return the number of sections.
     return 1;
+}
+
+// Fix error that the segue is currently connected from table view cell to another view controller,
+// that's why when touching on the bottom cell, then the app will push to another view
+// instead of touching on login and register button.
+// We need to connect the segue from the view to another view instead of the table cell to another view.
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    if([identifier isEqualToString:@"ContactListViewController"])
+    {
+        LoginInfo *info = [LoginInfo sharedObject];
+        if(info.userName == nil) return NO;
+    }
+    return YES;
 }
 
 //- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
