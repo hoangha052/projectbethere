@@ -108,7 +108,14 @@
     user.password = _tfPassword.text;
     user.email = _tfEmail.text;
     // other fields can be set just like with PFObject
-    
+
+    // Username is automatically set up using username in email address.
+    NSArray* parts = [user.username componentsSeparatedByString:@"@"];
+    if(parts.count > 0)
+    {
+        user.username = [parts objectAtIndex:0];
+    }
+
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
             PFInstallation *dataInstall = [PFInstallation currentInstallation];
