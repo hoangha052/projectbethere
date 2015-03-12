@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface MessageTableViewController : UIViewController
+@interface MessageTableViewController : BaseViewController
 @property (copy, nonatomic) NSString *stringSender;
 
 @end
