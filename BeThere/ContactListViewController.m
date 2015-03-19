@@ -81,10 +81,25 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 //       friends = [friends valueForKey:@"friendName"];
 //    }
 //    NSLog(@"Friend list %@", friends);
-    PFQuery *query = [PFQuery queryWithClassName:@"_User"];
 //    [query whereKey:@"username" containedIn:friends];
-    self.userArray = [query findObjects];
-    self.userArray = [self.userArray filteredArrayUsingPredicate:[NSPredicate predicateWithValueNotEqual:self.userInfo.userName forKey:@"username"]];
+
+    // Get all relationship to the current user.
+    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
+    [query whereKey:@"myname" equalTo:self.userInfo.userName];
+    NSArray * relationships = [query findObjects];
+
+    NSMutableArray* friends = [[NSMutableArray alloc] init];
+    for(PFObject *relationship in relationships)
+    {
+        query = [PFUser query];
+        [query whereKey:@"username" equalTo:[relationship objectForKey:@"friendname"]];
+        NSArray *users = [query findObjects];
+        if(users.count > 0) [friends addObject:[users objectAtIndex:0]];
+    }
+    // Get the details of friends.
+
+    self.userArray = friends;
+//    self.userArray = [self.userArray filteredArrayUsingPredicate:[NSPredicate predicateWithValueNotEqual:self.userInfo.userName forKey:@"username"]];
     self.contactArray = [NSMutableArray arrayWithCapacity:[self.userArray count]];
     NSMutableDictionary *dicUser = nil;
     Blacklist *blacklistUser = nil;
@@ -294,39 +309,55 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     if (alertView.tag == 0) {
         return;
     }
-    else if (alertView.tag ==1) {
-        if (buttonIndex == 1) {
-        NSLog(@"save data to db");
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            PFPush *push = [[PFPush alloc] init];
-            NSDictionary *dataDict = @{@"type":@"response",@"sender":self.userInfo.userName};
-            [push setChannels:@[self.namePushNotification]];
-            [push setMessage:[NSString stringWithFormat:@"[%@] accept your request",self.userInfo.userName]];
-            [push setData:dataDict];
-            [push sendPushInBackground];
-        });
-        NSLog(@"save Friend to db");
-        Friends *userFriends = [Friends newObject];
-        userFriends.myName = self.userInfo.userName;
-        userFriends.friendName = self.namePushNotification;
-        [userFriends save];
-        [self loadData];
+
+    // Current user touch on friend request alert view, system checks what buttons are touched.
+    else if (alertView.tag ==1)
+    {
+        // Current user accepts friend request, the friend relationship is about to be stored in cloud.
+        if (buttonIndex == 1)
+        {
+            NSLog(@"save data to db");
+
+            // Inform the sender that this request has been accepted.
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                PFPush *push = [[PFPush alloc] init];
+                NSDictionary *dataDict = @{@"type":@"response",@"sender":self.userInfo.userName};
+                [push setChannels:@[self.namePushNotification]];
+                [push setMessage:[NSString stringWithFormat:@"[%@] accept your request",self.userInfo.userName]];
+                [push setData:dataDict];
+                [push sendPushInBackground];
+            });
+
+            NSLog(@"save Friend to db");
+
+            // Store the relationship to cloud.
+            PFObject* friend = [PFObject objectWithClassName:@"Friends"];
+            friend[@"myname"] = self.userInfo.userName;
+            friend[@"friendname"] = self.namePushNotification;
+            [friend save];
+
+            [self loadData];
         }
-        
     }
-    else{
-    NSString *name = [alertView textFieldAtIndex:0].text;
-    if (buttonIndex == 1) {
-        // Send a notification to all devices subscribed to the "Giants" channel.
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            PFPush *push = [[PFPush alloc] init];
-            NSDictionary *data =@{@"type":@"request",@"sender":self.userInfo.userName};
-            [push setChannels:@[name]];
-            [push setMessage:[NSString stringWithFormat:@"you have a request from [%@]",self.userInfo.userName]];
-            [push setData:data];
-            [push sendPushInBackground];
-        });
-    }
+
+    // Current user touch on send friend request alert view, system checks what buttons are touched.
+    else
+    {
+        NSString *name = [alertView textFieldAtIndex:0].text;
+
+        // Current user wants to send a friend request, system pushes this notification to the other device.
+        if (buttonIndex == 1)
+        {
+            // Send a notification to all devices subscribed to the "Giants" channel.
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                PFPush *push = [[PFPush alloc] init];
+                NSDictionary *data =@{@"type":@"request",@"sender":self.userInfo.userName};
+                [push setChannels:@[name]];
+                [push setMessage:[NSString stringWithFormat:@"you have a request from [%@]",self.userInfo.userName]];
+                [push setData:data];
+                [push sendPushInBackground];
+            });
+        }
     }
 }
 #pragma mark - UITableView Cell Delegate
