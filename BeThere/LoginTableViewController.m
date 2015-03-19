@@ -89,9 +89,11 @@
                                             saveLogin.userEmail = user.email;
 
                                             // Do stuff after successful login.
-//                                            [self performSegueWithIdentifier:kSegue_ContactListViewController sender:self];
-                                            NSDictionary *data =@{@"type":@"request",@"sender":@"phannam"};
-                                            [[[UIApplication sharedApplication] delegate] application:[UIApplication sharedApplication] didReceiveRemoteNotification:data];
+                                            [self performSegueWithIdentifier:kSegue_ContactListViewController sender:self];
+
+                                            // @todo debug
+//                                            NSDictionary *data =@{@"type":@"request",@"sender":@"phannam"};
+//                                            [[[UIApplication sharedApplication] delegate] application:[UIApplication sharedApplication] didReceiveRemoteNotification:data];
 
                                         } else {
                                             // The login failed. Check error to see why.
