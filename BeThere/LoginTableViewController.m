@@ -89,8 +89,10 @@
                                             saveLogin.userEmail = user.email;
 
                                             // Do stuff after successful login.
-                                            [self performSegueWithIdentifier:kSegue_ContactListViewController sender:self];
-                                            
+//                                            [self performSegueWithIdentifier:kSegue_ContactListViewController sender:self];
+                                            NSDictionary *data =@{@"type":@"request",@"sender":@"phannam"};
+                                            [[[UIApplication sharedApplication] delegate] application:[UIApplication sharedApplication] didReceiveRemoteNotification:data];
+
                                         } else {
                                             // The login failed. Check error to see why.
                                             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Wrong username or password" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];

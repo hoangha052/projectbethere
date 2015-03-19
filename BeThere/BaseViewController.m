@@ -7,9 +7,7 @@
 #import "NSManagedObject+TSCUtils.h"
 
 
-@implementation BaseViewController {
-
-}
+@implementation BaseViewController
 
 - (Message*) dummy_message
 {
@@ -20,6 +18,12 @@
     dummy.receiver = @"0";
     dummy.readmessage = [NSNumber numberWithInt:1];
     return dummy;
+}
+
+- (void)dummy_friend_request_from_username:(NSString *)username
+{
+    NSDictionary *data =@{@"type":@"request",@"sender":username};
+    [[[UIApplication sharedApplication] delegate] application:[UIApplication sharedApplication] didReceiveRemoteNotification:data];
 }
 
 @end

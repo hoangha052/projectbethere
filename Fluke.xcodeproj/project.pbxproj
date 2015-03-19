@@ -154,6 +154,7 @@
 		67E0D8791A5DA8A400BAE65F /* symbol-list-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 67E0D8081A5DA8A400BAE65F /* symbol-list-background.png */; };
 		67E0D87B1A5DA8A400BAE65F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E0D80B1A5DA8A400BAE65F /* User.m */; };
 		67E0D87E1A5DA8B300BAE65F /* ReadMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E0D87D1A5DA8B300BAE65F /* ReadMessageViewController.m */; };
+		9ACB2D734FA3031132AE32B2 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ACB207F3F6DF7AC44302A92 /* BaseViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -363,6 +364,8 @@
 		67E0D80B1A5DA8A400BAE65F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		67E0D87C1A5DA8B300BAE65F /* ReadMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadMessageViewController.h; sourceTree = SOURCE_ROOT; };
 		67E0D87D1A5DA8B300BAE65F /* ReadMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadMessageViewController.m; sourceTree = SOURCE_ROOT; };
+		9ACB207F3F6DF7AC44302A92 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
+		9ACB24F94F38D06DA56B745C /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -525,6 +528,8 @@
 				67E0D7BB1A5DA8A400BAE65F /* ResourceImage */,
 				67E0D80A1A5DA8A400BAE65F /* User.h */,
 				67E0D80B1A5DA8A400BAE65F /* User.m */,
+				9ACB207F3F6DF7AC44302A92 /* BaseViewController.m */,
+				9ACB24F94F38D06DA56B745C /* BaseViewController.h */,
 			);
 			path = BeThere;
 			sourceTree = "<group>";
@@ -748,7 +753,7 @@
 				ORGANIZATIONNAME = hoangha052;
 				TargetAttributes = {
 					677643161A0A8BF600829566 = {
-						DevelopmentTeam = 58B26A2343;
+						DevelopmentTeam = ZURG695CEC;
 					};
 					677643371A0A8BF700829566 = {
 						TestTargetID = 677643161A0A8BF600829566;
@@ -923,6 +928,7 @@
 				67E0D82C1A5DA8A400BAE65F /* PopupNewMessageViewController.m in Sources */,
 				67B8E9791A173E5800EBA67F /* AFURLResponseSerialization.m in Sources */,
 				67B8E9901A173E5F00EBA67F /* UIButton+AFNetworking.m in Sources */,
+				9ACB2D734FA3031132AE32B2 /* BaseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1045,8 +1051,8 @@
 		6776434A1A0A8BF700829566 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Tri Pham (7L45TBT9XC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tri Pham (7L45TBT9XC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/parse-library-1.5.0",
@@ -1056,7 +1062,7 @@
 				INFOPLIST_FILE = "BeThere/Fluke-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = Fluke;
-				PROVISIONING_PROFILE = "6943b196-04ed-442c-99fd-6abe58010663";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1065,8 +1071,8 @@
 		6776434B1A0A8BF700829566 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Tri Pham (7L45TBT9XC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tri Pham (7L45TBT9XC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/parse-library-1.5.0",
@@ -1076,7 +1082,7 @@
 				INFOPLIST_FILE = "BeThere/Fluke-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = Fluke;
-				PROVISIONING_PROFILE = "6943b196-04ed-442c-99fd-6abe58010663";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

@@ -11,4 +11,6 @@
 
 - (Message*) dummy_message;
 
+- (void)dummy_friend_request_from_username:(NSString*) username;
+
 @end
