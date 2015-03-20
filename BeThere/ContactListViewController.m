@@ -72,22 +72,15 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     [self loadData];
 }
 
+// All friends of the current user are loaded from cloud.
 - (void)loadData
 {
-    /*Fution send request add friend*/
-//    NSArray *friends = [Friends entitiesWithValue:self.userInfo.userName forKey:@"myName" fault:NO];
-//    NSArray *friends = [Friends entitiesWithValue:self.userInfo.userName forKey:@"myName" fault:NO];
-//    if (friends.count > 0) {
-//       friends = [friends valueForKey:@"friendName"];
-//    }
-//    NSLog(@"Friend list %@", friends);
-//    [query whereKey:@"username" containedIn:friends];
-
-    // Get all relationship to the current user.
+    // Get all relationships of the current user.
     PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
     [query whereKey:@"myname" equalTo:self.userInfo.userName];
     NSArray * relationships = [query findObjects];
 
+    // Get the details of friends.
     NSMutableArray* friends = [[NSMutableArray alloc] init];
     for(PFObject *relationship in relationships)
     {
@@ -96,20 +89,22 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
         NSArray *users = [query findObjects];
         if(users.count > 0) [friends addObject:[users objectAtIndex:0]];
     }
-    // Get the details of friends.
 
     self.userArray = friends;
-//    self.userArray = [self.userArray filteredArrayUsingPredicate:[NSPredicate predicateWithValueNotEqual:self.userInfo.userName forKey:@"username"]];
+
     self.contactArray = [NSMutableArray arrayWithCapacity:[self.userArray count]];
+
     NSMutableDictionary *dicUser = nil;
     Blacklist *blacklistUser = nil;
     
-    for (PFUser *user in self.userArray) {
+    for (PFUser *user in self.userArray)
+    {
         dicUser = [[NSMutableDictionary alloc] init];
         [dicUser setObject:user forKey:@"user"];
         [dicUser setObject:@(NO) forKey:@"isSelected"];
         blacklistUser = [[Blacklist entitiesWithANDPredicateFromDictionary:@{@"userName":self.userInfo.userName, @"blackName":user.username} fault:NO] firstObject];
-        if (!blacklistUser) {
+        if (!blacklistUser)
+        {
             blacklistUser = [Blacklist newObject];
             blacklistUser.isReceiver = @(NO);
             blacklistUser.userName = self.userInfo.userName;
@@ -136,10 +131,17 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (void)viewWillAppear:(BOOL)animated{
+
+// There are some friend requests that need to be displayed ?
+// If any, system will ask if the current user accepts the friend request or not.
+// An alert view is used to collect user's response to the friend request.
+- (void)viewWillAppear:(BOOL)animated
+{
     [super viewDidAppear:animated];
-    if (self.isRequest) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"you have receiver invatition add friend" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    if (self.isRequest)
+    {
+        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",self.userInfo.userName];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
         alertView.tag = 1;
         [alertView show];
     }
