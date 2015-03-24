@@ -35,6 +35,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 @property (strong, nonatomic) NSArray *userArray;
 @property (strong, nonatomic) NSMutableArray *contactArray;
 @property (strong, nonatomic)  LoginInfo *userInfo;
+@property (strong, nonatomic)  PFObject *friend_request;
 @property (assign, nonatomic) BOOL isBlackList;
 @end
 
@@ -76,8 +77,8 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 - (void)loadData
 {
     // Get all relationships of the current user.
-    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
-    [query whereKey:@"myname" equalTo:self.userInfo.userName];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sender = 'phannam1412'"];
+    PFQuery* query = [PFQuery queryWithClassName:@"Friends" prefdicate:predicate];
     NSArray * relationships = [query findObjects];
 
     // Get the details of friends.
@@ -137,10 +138,15 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 // An alert view is used to collect user's response to the friend request.
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-    if (self.isRequest)
+    [super viewWillAppear:animated];
+
+    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
+    [query whereKey:@"receiver" equalTo:@"phannam1412"];
+    NSArray *friend_requests = [query findObjects];
+    if([friend_requests count] > 0)
     {
-        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",self.userInfo.userName];
+        self.friend_request = [friend_requests objectAtIndex:0];
+        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
         alertView.tag = 1;
         [alertView show];
@@ -333,10 +339,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
             NSLog(@"save Friend to db");
 
             // Store the relationship to cloud.
-            PFObject* friend = [PFObject objectWithClassName:@"Friends"];
-            friend[@"myname"] = self.userInfo.userName;
-            friend[@"friendname"] = self.namePushNotification;
-            [friend save];
+            self.friend_request[@"status"] = @"accepted";
 
             [self loadData];
         }
