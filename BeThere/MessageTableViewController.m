@@ -36,8 +36,13 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]]];
     LoginInfo *userInfo = [LoginInfo sharedObject];
-    // Do any additional setup after loading the view.
+
+    PFQuery *query = [PFQuery queryWithClassName:@"message"];
+    [query whereKey:@"receiver" equalTo:userInfo.userName];
+    NSArray* messages = [query findObjects];
+
     self.arrayMessage  = [Message entitiesWithValue:userInfo.userName forKey:@"receiver" fault:NO];
+    self.arrayMessage = messages;
     if (self.stringSender) {
         self.arrayMessage = [self.arrayMessage filteredArrayUsingPredicate:[NSPredicate predicateWithValue:self.stringSender forKey:@"sender"]];
     }
@@ -67,9 +72,7 @@
 */
 #pragma mark - TableView Delegate
 
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
-
+// Prepare layout for displaying a message.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"cellIdentifier";
@@ -78,24 +81,17 @@
     {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier] ;
     }
-    Message *newMessager = [self.arrayData objectAtIndex:indexPath.row];
+    PFObject* message = [self.arrayData objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = newMessager.sender;
+    cell.textLabel.text = [message objectForKey:@"sender"];
     NSString *contentString = @"";
-    if ([newMessager.content  length] >= 20)
-        contentString = [newMessager.content substringToIndex:20];
-    else
-        contentString = newMessager.content;
+    contentString = [message objectForKey:@"content"];
     
     cell.detailTextLabel.text = contentString;
-    if ([newMessager.readmessage boolValue])
-    {
+    if ([[message objectForKey:@"readmessage"] boolValue])
         cell.imageView.image = [UIImage imageNamed:@"icon_readed"];
-    }
     else
-    {
         cell.imageView.image = [UIImage imageNamed:@"icon_unread"];
-    }
 
     return cell;
 }
@@ -110,21 +106,29 @@
     return YES;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    Message *object = [self.arrayData objectAtIndex:indexPath.row];
-    object.readmessage = @(YES);
-    [object save];
+// User taps a row to view the message.
+// System:
+// - Notify the cloud that this message has been viewed.
+// - Display the message view screen.
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Notify the cloud that this message has been viewed.
+    PFObject *message = [self.arrayData objectAtIndex:indexPath.row];
+    message[@"readmessage"] = @(YES);
+    [message save];
+
+    // Prepare data to push to message view screen.
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setValue:object.content forKey:@"content"];
-//    NSDictionary *dic = @{@"content": object.content};
-    [dic setValue:object.sender forKey:@"sender"];
+    [dic setValue:[message objectForKey:@"content"] forKey:@"content"];
+    [dic setValue:[message objectForKey:@"sender"] forKey:@"sender"];
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
     ReadMessageViewController *ivc = [mainStoryboard instantiateViewControllerWithIdentifier: @"ReadMessageViewController"];
     ivc.message = dic;
     [self.navigationController pushViewController:ivc animated:YES];
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
     if (editingStyle == UITableViewCellEditingStyleDelete) {
          Message *object = [self.arrayData objectAtIndex:indexPath.row];
         [Message deleteEntities:@[object]];
