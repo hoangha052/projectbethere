@@ -75,14 +75,14 @@
     [[UIStoryboard storyboardWithName:@"Main"
                                bundle:NULL] instantiateViewControllerWithIdentifier:@"ReadMessageViewController"];
     viewController.message = self.dicMessage;
-    [self.navigationController pushViewController:viewController animated:NO];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (IBAction)cancelButtonPress:(id)sender {
     ContactListViewController *viewController =
     [[UIStoryboard storyboardWithName:@"Main"
                                bundle:NULL] instantiateViewControllerWithIdentifier:@"ContactListViewController"];
-    [self.navigationController pushViewController:viewController animated:NO];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

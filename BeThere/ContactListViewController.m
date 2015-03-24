@@ -221,7 +221,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     [userInfo resetData];
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
     LoginTableViewController*ivc = [mainStoryboard instantiateViewControllerWithIdentifier: @"LoginTableViewController"];
-    [self.navigationController pushViewController:ivc animated:NO];
+    [self.navigationController pushViewController:ivc animated:YES];
 
 }
 - (void)setIsBlackList:(BOOL)isBlackList

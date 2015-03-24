@@ -16,7 +16,7 @@
 @interface MessageTableViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSArray *arrayMessage;
-@property (strong, nonatomic) NSMutableArray *arrayData;
+@property (strong, nonatomic) NSMutableArray *messages;
 
 @end
 
@@ -46,7 +46,7 @@
     if (self.stringSender) {
         self.arrayMessage = [self.arrayMessage filteredArrayUsingPredicate:[NSPredicate predicateWithValue:self.stringSender forKey:@"sender"]];
     }
-    self.arrayData = [NSMutableArray arrayWithArray:self.arrayMessage];
+    self.messages = [NSMutableArray arrayWithArray:self.arrayMessage];
     [self.tableView reloadData];
 }
 
@@ -57,7 +57,7 @@
 }
 
 - (IBAction)btnBackPress:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /*
@@ -77,28 +77,23 @@
 {
     static NSString *cellIdentifier = @"cellIdentifier";
     UITableViewCell *cell  = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if(cell == nil)
-    {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier] ;
-    }
-    PFObject* message = [self.arrayData objectAtIndex:indexPath.row];
+    if(cell == nil) cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier] ;
+    PFObject* message = [self.messages objectAtIndex:indexPath.row];
     
     cell.textLabel.text = [message objectForKey:@"sender"];
-    NSString *contentString = @"";
-    contentString = [message objectForKey:@"content"];
-    
-    cell.detailTextLabel.text = contentString;
+    cell.detailTextLabel.text = [message objectForKey:@"content"];
+
     if ([[message objectForKey:@"readmessage"] boolValue])
-        cell.imageView.image = [UIImage imageNamed:@"icon_readed"];
+        cell.imageView.image = [UIImage imageNamed:@"icon-message-read.png"];
     else
-        cell.imageView.image = [UIImage imageNamed:@"icon_unread"];
+        cell.imageView.image = [UIImage imageNamed:@"icon-message-unread.png"];
 
     return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return [self.arrayData count];
+    return [self.messages count];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -113,7 +108,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Notify the cloud that this message has been viewed.
-    PFObject *message = [self.arrayData objectAtIndex:indexPath.row];
+    PFObject *message = [self.messages objectAtIndex:indexPath.row];
     message[@"readmessage"] = @(YES);
     [message save];
 
@@ -127,14 +122,15 @@
     [self.navigationController pushViewController:ivc animated:YES];
 }
 
+// Delete a message by swiping left.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-         Message *object = [self.arrayData objectAtIndex:indexPath.row];
-        [Message deleteEntities:@[object]];
-        [self.arrayData removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths: @[indexPath]
-                         withRowAnimation:UITableViewRowAnimationFade];
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        PFObject *message = [self.messages objectAtIndex:indexPath.row];
+        [message delete];
+        [self.messages removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 

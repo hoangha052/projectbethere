@@ -103,7 +103,7 @@
                 CreatMessageViewController *viewController =
                 [[UIStoryboard storyboardWithName:@"Main"
                                            bundle:NULL] instantiateViewControllerWithIdentifier:@"ContactListViewController"];
-                [self.navigationController pushViewController:viewController animated:NO];
+                [self.navigationController pushViewController:viewController animated:YES];
             });
         });
     }
@@ -114,11 +114,7 @@
 }
 
 - (IBAction)btnBackPress:(id)sender {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
-//
-//- (IBAction)btnCancelPress:(id)sender {
-//    [self.navigationController popViewControllerAnimated:NO];
-//}
 
 @end
