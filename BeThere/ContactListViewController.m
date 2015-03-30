@@ -77,18 +77,28 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 - (void)loadData
 {
     // Get all relationships of the current user.
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sender = 'phannam1412'"];
-    PFQuery* query = [PFQuery queryWithClassName:@"Friends" prefdicate:predicate];
+    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
+//    [query whereKey:@"sender" equalTo:self.userInfo.userName];
     NSArray * relationships = [query findObjects];
 
     // Get the details of friends.
     NSMutableArray* friends = [[NSMutableArray alloc] init];
     for(PFObject *relationship in relationships)
     {
-        query = [PFUser query];
-        [query whereKey:@"username" equalTo:[relationship objectForKey:@"friendname"]];
-        NSArray *users = [query findObjects];
-        if(users.count > 0) [friends addObject:[users objectAtIndex:0]];
+        if([[relationship objectForKey:@"sender"] isEqualToString:self.userInfo.userName])
+        {
+            query = [PFUser query];
+            [query whereKey:@"username" equalTo:[relationship objectForKey:@"receiver"]];
+            NSArray *users = [query findObjects];
+            if(users.count > 0) [friends addObject:[users objectAtIndex:0]];
+        }
+        if([[relationship objectForKey:@"receiver"] isEqualToString:self.userInfo.userName])
+        {
+            query = [PFUser query];
+            [query whereKey:@"username" equalTo:[relationship objectForKey:@"sender"]];
+            NSArray *users = [query findObjects];
+            if(users.count > 0) [friends addObject:[users objectAtIndex:0]];
+        }
     }
 
     self.userArray = friends;
@@ -140,17 +150,17 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 {
     [super viewWillAppear:animated];
 
-    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
-    [query whereKey:@"receiver" equalTo:@"phannam1412"];
-    NSArray *friend_requests = [query findObjects];
-    if([friend_requests count] > 0)
-    {
-        self.friend_request = [friend_requests objectAtIndex:0];
-        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-        alertView.tag = 1;
-        [alertView show];
-    }
+//    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
+//    [query whereKey:@"receiver" equalTo:self.userInfo.userName];
+//    NSArray *friend_requests = [query findObjects];
+//    if([friend_requests count] > 0)
+//    {
+//        self.friend_request = [friend_requests objectAtIndex:0];
+//        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+//        alertView.tag = 1;
+//        [alertView show];
+//    }
 }
 
 #pragma mark - Navigation
