@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="orB-Pz-Jq7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="orB-Pz-Jq7">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -280,6 +280,7 @@
                                 <rect key="frame" x="25" y="58" width="270" height="370"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.4399882095" green="1" blue="0.94774019649999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.93523387709492778" green="1" blue="0.74764490637608705" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -544,7 +545,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="pL8-xD-QoF">
                                         <rect key="frame" x="35" y="8" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="symbol-1.png">
+                                        <state key="normal" backgroundImage="pk1.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -554,7 +555,7 @@
                                     <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="4n5-VR-Lpi">
                                         <rect key="frame" x="80" y="8" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="symbol-2.png">
+                                        <state key="normal" backgroundImage="pk2.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -564,7 +565,7 @@
                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="7b4-sB-gvp">
                                         <rect key="frame" x="123" y="8" width="33" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="symbol-3.png">
+                                        <state key="normal" backgroundImage="pk3.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -574,7 +575,7 @@
                                     <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="SxU-YU-hwr">
                                         <rect key="frame" x="169" y="8" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="symbol-4.png">
+                                        <state key="normal" backgroundImage="pk4.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -717,7 +718,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="v2R-vr-U3z"/>
                     <connections>
@@ -747,10 +747,10 @@
         <image name="button-view-message.png" width="32" height="32"/>
         <image name="fluke-logo.png" width="117" height="195"/>
         <image name="icon-message-read.png" width="20" height="27"/>
-        <image name="symbol-1.png" width="30" height="30"/>
-        <image name="symbol-2.png" width="30" height="30"/>
-        <image name="symbol-3.png" width="30" height="30"/>
-        <image name="symbol-4.png" width="30" height="30"/>
+        <image name="pk1.png" width="150" height="150"/>
+        <image name="pk2.png" width="150" height="150"/>
+        <image name="pk3.png" width="150" height="150"/>
+        <image name="pk4.png" width="150" height="150"/>
         <image name="symbol-5.png" width="16" height="30"/>
         <image name="symbol-6.png" width="30" height="30"/>
     </resources>
@@ -760,6 +760,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="8pD-2L-rHY"/>
+        <segue reference="ZPi-LF-pQi"/>
     </inferredMetricsTieBreakers>
 </document>
