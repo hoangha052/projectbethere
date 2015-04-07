@@ -76,15 +76,18 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 // All friends of the current user are loaded from cloud.
 - (void)loadData
 {
-    // Get all relationships of the current user.
+    // Get all relationships from cloud,
+    // these relationships will be checked later to determine if it's current user's relationship.
     PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
-//    [query whereKey:@"sender" equalTo:self.userInfo.userName];
+    [query whereKey:@"status" equalTo:@"accepted"];
     NSArray * relationships = [query findObjects];
 
-    // Get the details of friends.
+    // Travel through all relationships to determine the current user's friend relationship.
     NSMutableArray* friends = [[NSMutableArray alloc] init];
     for(PFObject *relationship in relationships)
     {
+        // If user is a friend request sender in this relationship, then receiver is a friend.
+        // Get the full details of this friend.
         if([[relationship objectForKey:@"sender"] isEqualToString:self.userInfo.userName])
         {
             query = [PFUser query];
@@ -92,6 +95,9 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
             NSArray *users = [query findObjects];
             if(users.count > 0) [friends addObject:[users objectAtIndex:0]];
         }
+
+        // If user is a friend request receiver in this relationship, then sender is a friend.
+        // Get the full details of this friend.
         if([[relationship objectForKey:@"receiver"] isEqualToString:self.userInfo.userName])
         {
             query = [PFUser query];
@@ -150,17 +156,22 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 {
     [super viewWillAppear:animated];
 
-//    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
-//    [query whereKey:@"receiver" equalTo:self.userInfo.userName];
-//    NSArray *friend_requests = [query findObjects];
-//    if([friend_requests count] > 0)
-//    {
-//        self.friend_request = [friend_requests objectAtIndex:0];
-//        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-//        alertView.tag = 1;
-//        [alertView show];
-//    }
+    // Find all pending friend requests of this user.
+    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
+    [query whereKey:@"receiver" equalTo:self.userInfo.userName];
+    [query whereKey:@"status" equalTo:@"pending"];
+    NSArray *friend_requests = [query findObjects];
+
+    // Are there any friend requests sent to this user ?
+    // The user will confirm if he accepts or refuses the friend request.
+    if([friend_requests count] > 0)
+    {
+        self.friend_request = [friend_requests objectAtIndex:0];
+        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        alertView.tag = 1;
+        [alertView show];
+    }
 }
 
 #pragma mark - Navigation
@@ -328,50 +339,80 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
         return;
     }
 
-    // Current user touch on friend request alert view, system checks what buttons are touched.
+    // User touches on friend request alert view,
+    // system checks what buttons are touched.
     else if (alertView.tag ==1)
     {
-        // Current user accepts friend request, the friend relationship is about to be stored in cloud.
+        // User accepts friend request,
+        // the friend relationship is about to be stored in cloud.
         if (buttonIndex == 1)
         {
-            NSLog(@"save data to db");
-
             // Inform the sender that this request has been accepted.
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                PFPush *push = [[PFPush alloc] init];
-                NSDictionary *dataDict = @{@"type":@"response",@"sender":self.userInfo.userName};
-                [push setChannels:@[self.namePushNotification]];
-                [push setMessage:[NSString stringWithFormat:@"[%@] accept your request",self.userInfo.userName]];
-                [push setData:dataDict];
-                [push sendPushInBackground];
-            });
+//            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//                PFPush *push = [[PFPush alloc] init];
+//                NSDictionary *dataDict = @{@"type":@"response",@"sender":self.userInfo.userName};
+//                [push setChannels:@[self.namePushNotification]];
+//                [push setMessage:[NSString stringWithFormat:@"[%@] accept your request",self.userInfo.userName]];
+//                [push setData:dataDict];
+//                [push sendPushInBackground];
+//            });
 
-            NSLog(@"save Friend to db");
-
-            // Store the relationship to cloud.
             self.friend_request[@"status"] = @"accepted";
+            [self.friend_request save];
 
             [self loadData];
         }
+
+        // User rejects the friend request,
+        // this action will be stored in cloud but the sender can send more request to this user.
+        else
+        {
+            [self.friend_request delete];
+        }
     }
 
-    // Current user touch on send friend request alert view, system checks what buttons are touched.
+    // User touch on send friend request alert view,
+    // system checks what buttons are touched.
     else
     {
         NSString *name = [alertView textFieldAtIndex:0].text;
 
-        // Current user wants to send a friend request, system pushes this notification to the other device.
+        // User wants to send a friend request,
+        // system pushes this notification to the other device.
         if (buttonIndex == 1)
         {
             // Send a notification to all devices subscribed to the "Giants" channel.
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                PFPush *push = [[PFPush alloc] init];
-                NSDictionary *data =@{@"type":@"request",@"sender":self.userInfo.userName};
-                [push setChannels:@[name]];
-                [push setMessage:[NSString stringWithFormat:@"you have a request from [%@]",self.userInfo.userName]];
-                [push setData:data];
-                [push sendPushInBackground];
-            });
+//            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//                PFPush *push = [[PFPush alloc] init];
+//                NSDictionary *data =@{@"type":@"request",@"sender":self.userInfo.userName};
+//                [push setChannels:@[name]];
+//                [push setMessage:[NSString stringWithFormat:@"you have a request from [%@]",self.userInfo.userName]];
+//                [push setData:data];
+//                [push sendPushInBackground];
+//            });
+
+            PFQuery *query = [PFQuery queryWithClassName:@"Friends"];
+            [query whereKey:@"sender" equalTo:self.userInfo.userName];
+            [query whereKey:@"receiver" equalTo:name];
+            PFObject* request = [query getFirstObject];
+            if(request != nil)
+            {
+                if([[request objectForKey:@"status"] isEqualToString:@"accepted"])
+                {
+
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"You have become friend with %@",name] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                    [alertView show];
+                }
+                return;
+            }
+
+            PFObject *friend_request = [PFObject objectWithClassName:@"Friends"];
+            friend_request[@"sender"] = self.userInfo.userName;
+            friend_request[@"receiver"] = name;
+            friend_request[@"status"] = @"pending";
+            [friend_request save];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"A friend request was sent to %@",name] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alertView show];
         }
     }
 }
