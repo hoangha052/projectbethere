@@ -18,6 +18,7 @@
 #import "MessageTableViewController.h"
 #import "Blacklist.h"
 #import "Friends+Utils.h"
+#import "LocationShareModel.h"
 
 //#import "ELCAlbumPickerController.h"
 
@@ -170,6 +171,54 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
         NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
         alertView.tag = 1;
+        [alertView show];
+        return;
+    }
+
+    [self _check_new_messages];
+}
+
+// Check all messages with appropriate locations that user can receive.
+- (void) _check_new_messages
+{
+    // Get the current location of the user.
+    // The current location is checked and saved in LocationTracker,
+    // the location of simulator is faked to be easily debugged.
+    // To remove the fake location, please modify LocationTracker.m
+    LocationShareModel *model = [LocationShareModel sharedModel];
+    NSArray* locations = model.myLocationArray;
+    if(locations.count == 0) return;
+    NSDictionary* location_dic = [locations firstObject];
+    CLLocation *current_location = [[CLLocation alloc] initWithLatitude:[[location_dic objectForKey:@"latitude"] floatValue] longitude:[[location_dic objectForKey:@"longitude"] floatValue]];
+
+    // Check if there is any pending messages sent to the user.
+    PFQuery *query = [PFQuery queryWithClassName:@"message"];
+    [query whereKey:@"receiver" equalTo:self.userInfo.userName];
+    [query whereKey:@"status" equalTo:@"pending"];
+    NSArray *messages = [query findObjects];
+    if(messages.count == 0) return;
+    int message_received_count = 0;
+    for(PFObject *message in messages)
+    {
+        PFGeoPoint *point = [message objectForKey:@"location"];
+        CLLocation *message_location = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
+        double message_radius = [[message objectForKey:@"radius"] doubleValue];
+        CLLocationDistance distance = [current_location distanceFromLocation:message_location];
+
+        // Is this message in the appropriate distance specified by the sender ?
+        if(distance < message_radius)
+        {
+            message_received_count++;
+            message[@"status"] = @"received";
+            [message save];
+        }
+    }
+
+    // Notify user of new messages if any.
+    if(message_received_count > 0)
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"You have %d new messages",message_received_count] delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        alertView.tag = 0;
         [alertView show];
     }
 }
