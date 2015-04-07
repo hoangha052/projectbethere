@@ -39,6 +39,7 @@
 
     PFQuery *query = [PFQuery queryWithClassName:@"message"];
     [query whereKey:@"receiver" equalTo:userInfo.userName];
+    [query whereKey:@"status" equalTo:@"received"];
     NSArray* messages = [query findObjects];
 
     self.arrayMessage  = [Message entitiesWithValue:userInfo.userName forKey:@"receiver" fault:NO];

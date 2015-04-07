@@ -96,6 +96,7 @@
                 objectMessage[@"location"] = self.locationRecieve;
                 objectMessage[@"radius"] = @(self.radiusReceiver);
                 objectMessage[@"imagename"] = self.imageName;
+                objectMessage[@"status"] = @"pending";
                 [objectMessage saveEventually];
             }
             dispatch_async(dispatch_get_main_queue(), ^{

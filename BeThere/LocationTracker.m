@@ -21,17 +21,17 @@
 
 #ifdef TARGET_IPHONE_SIMULATOR
 
-//@interface CLLocationManager (Simulator)
-//@end
-//
-//@implementation CLLocationManager (Simulator)
-//
-//-(void)startUpdatingLocation {
-//    CLLocation *powellsTech = [[CLLocation alloc] initWithLatitude:10.779163 longitude:106.689401];
-//    [self.delegate locationManager:self didUpdateLocations:[[NSArray alloc] initWithObjects:powellsTech,nil]];
-//}
-//
-//@end
+@interface CLLocationManager (Simulator)
+@end
+
+@implementation CLLocationManager (Simulator)
+
+-(void)startUpdatingLocation {
+    CLLocation *powellsTech = [[CLLocation alloc] initWithLatitude:10.779163 longitude:106.689401];
+    [self.delegate locationManager:self didUpdateLocations:[[NSArray alloc] initWithObjects:powellsTech,nil]];
+}
+
+@end
 
 #endif // TARGET_IPHONE_SIMULATOR
 
@@ -160,9 +160,11 @@
             continue;
         }
         //Select only valid location and also location with good accuracy
-        if(newLocation!=nil&&theAccuracy>0
-           &&theAccuracy<2000
-           &&(!(theLocation.latitude==0.0&&theLocation.longitude==0.0))){
+        if(newLocation!=nil
+//                &&theAccuracy>0
+//           &&theAccuracy<2000
+           &&(!(theLocation.latitude==0.0&&theLocation.longitude==0.0))
+                ){
             self.myLastLocation = theLocation;
             self.myLastLocationAccuracy= theAccuracy;
             NSMutableDictionary * dict = [[NSMutableDictionary alloc]init];
