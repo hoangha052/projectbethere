@@ -489,19 +489,24 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 {
     NSIndexPath *idxPath = [self.tableUserView indexPathForCell:sender];
     NSInteger row = [idxPath row];
-    NSMutableDictionary *contentSelect = [self.contactArray objectAtIndex:row];
-    BOOL Select = [[contentSelect valueForKey:@"isSelected"] boolValue];
-    if (Select) {
-        [contentSelect setValue:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
+    NSMutableDictionary *selected_row = [self.contactArray objectAtIndex:row];
+    BOOL is_selected = [[selected_row valueForKey:@"isSelected"] boolValue];
+    if (is_selected)
+    {
+        [selected_row setValue:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
     }
-    else{
-        [contentSelect setValue:[NSNumber numberWithBool:YES] forKey:@"isSelected"];
+    else
+    {
+        [selected_row setValue:[NSNumber numberWithBool:YES] forKey:@"isSelected"];
     }
-    [self.contactArray replaceObjectAtIndex:row withObject:contentSelect];
+
+    // Update the object with new info.
+    [self.contactArray replaceObjectAtIndex:row withObject:selected_row];
     [self.tableUserView reloadRowsAtIndexPaths:@[idxPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
-- (void)showMessage:(id)sender{
+- (void)showMessage:(id)sender
+{
     NSIndexPath *idxPath = [self.tableUserView indexPathForCell:sender];
     NSInteger row = [idxPath row];
     NSMutableDictionary *dict = [self.contactArray objectAtIndex:row];
@@ -520,7 +525,8 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     BBUserTableViewCell *cell = (id)[tableView dequeueReusableCellWithIdentifier:@"BBUserTableViewCell"];
-    if (cell == nil) {
+    if (cell == nil)
+    {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"BBUserTableViewCell" owner:nil options:nil]firstObject];
     }
     cell.delegate = self;

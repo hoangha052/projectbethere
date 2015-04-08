@@ -69,9 +69,12 @@
     PFFile *theImage = user[@"image"];
     NSData *imageData = [theImage getData];
     UIImage *image = [UIImage imageWithData:imageData];
-    if (image) {
-       self.photoView.image = image;
-    }
+
+    // User profile photo or default Fluke image ?
+    if (image) self.photoView.image = image;
+    else self.photoView.image = [UIImage imageNamed:@"bethere-profile-photo.png"];
+
+
     self.isSelected = [[valueData objectForKey:@"isSelected"] boolValue];
     [self.switchButton setOn:[[valueData objectForKey:@"blacklist"] boolValue]];
 }
