@@ -26,7 +26,8 @@
 
 @implementation CLLocationManager (Simulator)
 
--(void)startUpdatingLocation {
+-(void)startUpdatingLocation
+{
     CLLocation *powellsTech = [[CLLocation alloc] initWithLatitude:10.779163 longitude:106.689401];
     [self.delegate locationManager:self didUpdateLocations:[[NSArray alloc] initWithObjects:powellsTech,nil]];
 }
@@ -81,6 +82,7 @@
     [self.shareModel.bgTask beginNewBackgroundTask];
 }
 
+// @todo unused
 - (void) restartLocationUpdates
 {
     NSLog(@"restartLocationUpdates");
@@ -124,11 +126,16 @@
             if(IS_OS_8_OR_LATER) {
 //              [locationManager requestAlwaysAuthorization];
             }
-            [locationManager startUpdatingLocation];
+//            [locationManager startUpdatingLocation];
+            self.shareModel.timer = [NSTimer scheduledTimerWithTimeInterval:15 target:locationManager
+                                                                   selector:@selector(startUpdatingLocation)
+                                                                   userInfo:nil
+                                                                    repeats:YES];
         }
 	}
 }
 
+// @todo unused
 - (void)stopLocationTracking {
     NSLog(@"stopLocationTracking");
     if (self.shareModel.timer) {
@@ -212,7 +219,9 @@
 
 
 //Stop the locationManager
--(void)stopLocationDelayBy10Seconds{
+// @todo unused
+-(void)stopLocationDelayBy10Seconds
+{
     CLLocationManager *locationManager = [LocationTracker sharedLocationManager];
     [locationManager stopUpdatingLocation];
     NSLog(@"locationManager stop Updating after 10 seconds");
