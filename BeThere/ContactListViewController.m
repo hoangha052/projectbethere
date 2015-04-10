@@ -71,6 +71,11 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
         }
     });
     [self loadData];
+
+    // Should reload contact list when new friends are added.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(loadData)
+                                                 name:@"did_add_friend" object:nil];
 }
 
 // All friends of the current user are loaded from cloud.
