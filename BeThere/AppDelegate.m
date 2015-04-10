@@ -92,7 +92,7 @@
         alertView.tag = 0;
         [alertView show];
 
-        // @todo should notify MessageViewController when there are new messages added.
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"did_receive_new_messages" object:nil];
     }
 }
 
@@ -128,20 +128,28 @@
 // system checks what buttons are touched.
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    // User accepts friend request,
-    // the friend relationship is about to be stored in cloud.
-    if (buttonIndex == 1)
+    // Friend request confirmation alert view.
+    if(alertView.tag == 1)
     {
-        self.friend_request[@"status"] = @"accepted";
-        [self.friend_request save];
+        // User accepts friend request,
+        // the friend relationship is about to be stored in cloud.
+        if (buttonIndex == 1)
+        {
+            self.friend_request[@"status"] = @"accepted";
+            [self.friend_request save];
 
-        // @todo should notify ContactListViewController when there are new friends added.
-    }
+            PFQuery *query = [PFUser query];
+            [query whereKey:@"username" equalTo:[self.friend_request objectForKey:@"sender"]];
+            PFUser *new_friend = [query getFirstObject];
 
-    // User rejects the friend request,
-    // this action will be stored in cloud but the sender can send more request to this user.
-    else {
-        [self.friend_request delete];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"did_add_friend" object:new_friend];
+        }
+
+            // User rejects the friend request,
+            // this action will be stored in cloud but the sender can send more request to this user.
+        else {
+            [self.friend_request delete];
+        }
     }
 }
 
