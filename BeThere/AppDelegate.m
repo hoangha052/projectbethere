@@ -91,6 +91,8 @@
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"You have %d new messages",message_received_count] delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         alertView.tag = 0;
         [alertView show];
+
+        // @todo should notify MessageViewController when there are new messages added.
     }
 }
 
@@ -132,6 +134,8 @@
     {
         self.friend_request[@"status"] = @"accepted";
         [self.friend_request save];
+
+        // @todo should notify ContactListViewController when there are new friends added.
     }
 
     // User rejects the friend request,
