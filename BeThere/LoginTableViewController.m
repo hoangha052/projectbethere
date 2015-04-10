@@ -108,7 +108,7 @@
     PFUser *user = [PFUser user];
     user.username = _tfUserName.text;
     user.password = _tfPassword.text;
-    user.email = _tfEmail.text;
+    user.email = _tfUserName.text;
     // other fields can be set just like with PFObject
 
     // Username is automatically set up using username in email address.
