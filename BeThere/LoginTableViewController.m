@@ -77,7 +77,17 @@
 - (IBAction)btnLoginPress:(id)sender {
     [PFUser logInWithUsernameInBackground:_tfUserName.text  password:_tfPassword.text
                                     block:^(PFUser *user, NSError *error) {
-                                        if (user) {
+                                        if (user)
+                                        {
+                                            // Check email verification.
+                                            if([[user objectForKey:@"emailVerified"] boolValue] == NO)
+                                            {
+                                                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"This user's email isn't verified, please verify your email before using app" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                                                [alertView show];
+                                                return;
+                                            }
+
+                                            // Save login credentials for accessing it throughout the app.
                                             PFInstallation *dataInstall = [PFInstallation currentInstallation];
                                             [dataInstall removeObjectForKey:@"channels"];
                                             [dataInstall addUniqueObject:_tfUserName.text forKey:@"channels"];
@@ -95,7 +105,8 @@
 //                                            NSDictionary *data =@{@"type":@"request",@"sender":@"phannam"};
 //                                            [[[UIApplication sharedApplication] delegate] application:[UIApplication sharedApplication] didReceiveRemoteNotification:data];
 
-                                        } else {
+                                        } else
+                                        {
                                             // The login failed. Check error to see why.
                                             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Wrong username or password" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
                                             [alertView show];
