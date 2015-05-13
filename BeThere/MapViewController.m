@@ -269,7 +269,24 @@
         [self sendLocation:geoPoint];
         [self.locationManager stopUpdatingLocation];
     }
-    
 }
 
+
+/*- (void)zoomToUserLocation:(MKUserLocation *)userLocation
+{
+    if (!userLocation)
+        return;
+    
+    MKCoordinateRegion region;
+    region.center = userLocation.location.coordinate;
+    region.span = MKCoordinateSpanMake(2.0, 2.0); //Zoom distance
+    region = [self.mapview regionThatFits:region];
+    [self.mapview setRegion:region animated:YES];
+}
+
+- (void)mapView:(MKMapView *)theMapView didUpdateToUserLocation:(MKUserLocation *)location
+{
+    [self zoomToUserLocation:location];
+}
+*/
 @end
