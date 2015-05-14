@@ -18,7 +18,7 @@
         dispatch_once(&onceToken, ^{
             sharedObject = [LoginInfo new];
             // complete download
-            sharedObject.arrayImage = @[@"symbol-1",@"symbol-2",@"symbol-3",@"symbol-4",@"symbol-5",@"symbol-6"];
+            sharedObject.arrayImage = @[@"pk1",@"pk2",@"pk3",@"pk4",@"symbol-5",@"symbol-6"];
         });
     }
     return sharedObject;

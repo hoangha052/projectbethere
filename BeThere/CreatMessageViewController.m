@@ -109,13 +109,19 @@
         });
     }
     else{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"THONG BAO" message:@"Ban chua nhap noi dung tin nhan" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Empty message" message:@"It would be lovely to hear something from you" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Fine", nil];
         [alertView show];
     }
 }
 
 - (IBAction)btnBackPress:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)btnCancelPress:(id)sender {
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+    ContactListViewController *controller = [mainStoryboard instantiateViewControllerWithIdentifier: @"ContactListViewController"];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 @end

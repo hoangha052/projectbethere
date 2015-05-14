@@ -106,7 +106,7 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]]];
     self.radiusValue = 10;
-    self.stringImage = @"symbol-1";
+    self.stringImage = @"pk1";
     self.loginInfo = [LoginInfo sharedObject];
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;

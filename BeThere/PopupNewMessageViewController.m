@@ -37,7 +37,7 @@
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]]];
     NSString *sender = [self.dicMessage objectForKey:@"sender"];
     NSString *image = [self.dicMessage objectForKey:@"imagename"];
-    self.lblTitle.text = [NSString stringWithFormat:@"You got a message from [%@]. Open it?",sender];
+    self.lblTitle.text = [NSString stringWithFormat:@"You found something from [%@]. Take a look?",sender];
     self.imageView.image = [UIImage imageNamed:image];
 }
 
