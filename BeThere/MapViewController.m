@@ -182,7 +182,7 @@
         }
         else
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Cannot find location" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sorry" message:@"That place doesn't exist... yet" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Deal with it", nil];
             [alert show];
         }
     }];

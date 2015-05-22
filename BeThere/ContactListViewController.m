@@ -59,6 +59,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     self.viewImage.layer.cornerRadius = 40;
     self.userInfo = [LoginInfo sharedObject];
     self.userInfo.reply = NO;
+    self.txtName.delegate = self;
     self.txtName.text = self.userInfo.userName;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         PFUser *user = [PFUser currentUser];
@@ -72,6 +73,28 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
         }
     });
     [self loadData];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
+    
+    [self.view addGestureRecognizer:tap];
+}
+-(void)dismissKeyboard {
+    [_txtName resignFirstResponder];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (textField == self.txtName) {
+        [textField resignFirstResponder];
+        PFUser *user = [PFUser currentUser];
+        [user setObject:self.txtName.text forKey:@"username"];
+        [user saveInBackground];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Username changed successfully" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [alertView show];
+        return NO;
+    }
+    return YES;
 }
 
 // All friends of the current user are loaded from cloud.
@@ -248,7 +271,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 //    [actionSheet setBackgroundColor:[UIColor purpleColor]];
 //    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
 //    {
-       UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Chụp hình",@"Tải ảnh từ thư viện", @"Huỷ bỏ", nil];
+       UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo",@"Open Library", @"Log out", nil];
         [actionSheet setBackgroundColor:[UIColor clearColor]];
         
 //    }
@@ -261,7 +284,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     LoginInfo *info = [LoginInfo sharedObject];
     info.arrayReceiver = [self.contactArray filteredArrayUsingPredicate:[NSPredicate predicateWithValue:@(YES) forKey:@"isSelected"]];
     if ([info.arrayReceiver count]<=0) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Please choose a contact" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Hey" message:@"Please choose someone to send" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Oops", nil];
         alertView.tag = 0;
         [alertView show];
     }
@@ -278,14 +301,14 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     [alert show];
 }
 
-- (IBAction) btnEditNamePress:(id)sender {
+/*- (IBAction) btnEditNamePress:(id)sender {
 //    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Are you sure you want to change username ?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     PFUser *user = [PFUser currentUser];
     [user setObject:self.txtName.text forKey:@"username"];
     [user saveInBackground];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Username changed successfully" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     [alertView show];
-}
+}*/
 
 - (IBAction)viewMessagePress:(id)sender {
     [self performSegueWithIdentifier:kSegue_MessageTableViewController sender:self];
@@ -374,6 +397,15 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
             [self takePhotoByLibrary];
         }
             break;
+        case 2:
+        {
+            [PFUser logOut];
+            LoginInfo *userInfo = [LoginInfo sharedObject];
+            [userInfo resetData];
+            UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+            LoginTableViewController*ivc = [mainStoryboard instantiateViewControllerWithIdentifier: @"LoginTableViewController"];
+            [self.navigationController pushViewController:ivc animated:YES];
+        }
         default:
             break;
     }
