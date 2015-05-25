@@ -28,10 +28,129 @@
     [Parse setApplicationId:@"wHAiPhtEABNNcQOo8CU7npAjhR8qwa0wh0F5Zg58" clientKey:@"MAevm4cTxwB6OajaiNBQJgdbI8t2HjZAAZdixPhG"];
 
     //You may adjust the time interval depends on the need of your app.
-        self.locationTracker = [[LocationTracker alloc]init];
-        [self.locationTracker startLocationTracking];
+    self.locationTracker = [[LocationTracker alloc]init];
+    [self.locationTracker startLocationTracking];
+
+    // Start background jobs.
+    [NSTimer scheduledTimerWithTimeInterval:15 target:self
+                                                           selector:@selector(_check_new_messages)
+                                                           userInfo:nil
+                                                            repeats:YES];
+
+    [NSTimer scheduledTimerWithTimeInterval:15 target:self
+                                                           selector:@selector(_check_new_friend_requests)
+                                                           userInfo:nil
+                                                            repeats:YES];
 
     return YES;
+}
+
+// Check all messages with appropriate locations that user can receive.
+- (void) _check_new_messages
+{
+    // Only process when user has logged in.
+    LoginInfo *login_info = [LoginInfo sharedObject];
+    if(login_info.userName == nil) return;
+
+    // Get the current location of the user.
+    // The current location is checked and saved in LocationTracker,
+    // the location of simulator is faked to be easily debugged.
+    // To remove the fake location, please modify LocationTracker.m
+    LocationShareModel *model = [LocationShareModel sharedModel];
+    NSArray* locations = model.myLocationArray;
+    if(locations.count == 0) return;
+    NSDictionary* location_dic = [locations firstObject];
+    CLLocation *current_location = [[CLLocation alloc] initWithLatitude:[[location_dic objectForKey:@"latitude"] floatValue] longitude:[[location_dic objectForKey:@"longitude"] floatValue]];
+
+    // Check if there is any pending messages sent to the user.
+    PFQuery *query = [PFQuery queryWithClassName:@"message"];
+    [query whereKey:@"receiver" equalTo:login_info.userName];
+    [query whereKey:@"status" equalTo:@"pending"];
+    NSArray *messages = [query findObjects];
+    if(messages.count == 0) return;
+    int message_received_count = 0;
+    for(PFObject *message in messages)
+    {
+        PFGeoPoint *point = [message objectForKey:@"location"];
+        CLLocation *message_location = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
+        double message_radius = [[message objectForKey:@"radius"] doubleValue];
+        CLLocationDistance distance = [current_location distanceFromLocation:message_location];
+
+        // Is this message in the appropriate distance specified by the sender ?
+        if(distance < message_radius)
+        {
+            message_received_count++;
+            message[@"status"] = @"received";
+            [message save];
+        }
+    }
+
+    // Notify user of new messages if any.
+    if(message_received_count > 0)
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"You have %d new messages",message_received_count] delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        alertView.tag = 0;
+        [alertView show];
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"did_receive_new_messages" object:nil];
+    }
+}
+
+// There are some friend requests that need to be displayed ?
+// If any, system will ask if the current user accepts the friend request or not.
+// An alert view is used to collect user's response to the friend request.
+- (void) _check_new_friend_requests
+{
+    // Only process when user has logged in.
+    LoginInfo *login_info = [LoginInfo sharedObject];
+    if(login_info.userName == nil) return;
+
+    // Find all pending friend requests of this user.
+    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
+    [query whereKey:@"receiver" equalTo:login_info.userName];
+    [query whereKey:@"status" equalTo:@"pending"];
+    NSArray *friend_requests = [query findObjects];
+
+    // Are there any friend requests sent to this user ?
+    // The user will confirm if he accepts or refuses the friend request.
+    if([friend_requests count] > 0)
+    {
+        self.friend_request = [friend_requests objectAtIndex:0];
+        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        alertView.tag = 1;
+        [alertView show];
+        return;
+    }
+}
+
+// User touches on friend request alert view,
+// system checks what buttons are touched.
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    // Friend request confirmation alert view.
+    if(alertView.tag == 1)
+    {
+        // User accepts friend request,
+        // the friend relationship is about to be stored in cloud.
+        if (buttonIndex == 1)
+        {
+            self.friend_request[@"status"] = @"accepted";
+            [self.friend_request save];
+
+            PFQuery *query = [PFUser query];
+            [query whereKey:@"username" equalTo:[self.friend_request objectForKey:@"sender"]];
+            PFUser *new_friend = [query getFirstObject];
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"did_add_friend" object:new_friend];
+        }
+
+            // User rejects the friend request,
+            // this action will be stored in cloud but the sender can send more request to this user.
+        else {
+            [self.friend_request delete];
+        }
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

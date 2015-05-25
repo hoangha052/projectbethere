@@ -46,6 +46,12 @@
     LoginInfo *info = [LoginInfo sharedObject];
     info.reply = YES;
     info.receiverReply = [self.message objectForKey:@"sender"];
+
+    // Get user info from cloud for sending message.
+    PFQuery *query = [PFUser query];
+    [query whereKey:@"username" equalTo:[self.message objectForKey:@"sender"]];
+    info.arrayReceiver = @[@{@"user":[query getFirstObject]}];
+
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
     MapViewController *controller = [mainStoryboard instantiateViewControllerWithIdentifier:@"MapViewController"];
     [self.navigationController pushViewController:controller animated:YES];

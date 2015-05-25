@@ -36,7 +36,6 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 @property (strong, nonatomic) NSArray *userArray;
 @property (strong, nonatomic) NSMutableArray *contactArray;
 @property (strong, nonatomic)  LoginInfo *userInfo;
-@property (strong, nonatomic)  PFObject *friend_request;
 @property (assign, nonatomic) BOOL isBlackList;
 @end
 
@@ -173,77 +172,9 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
     // Dispose of any resources that can be recreated.
 }
 
-// There are some friend requests that need to be displayed ?
-// If any, system will ask if the current user accepts the friend request or not.
-// An alert view is used to collect user's response to the friend request.
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    // Find all pending friend requests of this user.
-    PFQuery* query = [PFQuery queryWithClassName:@"Friends"];
-    [query whereKey:@"receiver" equalTo:self.userInfo.userName];
-    [query whereKey:@"status" equalTo:@"pending"];
-    NSArray *friend_requests = [query findObjects];
-
-    // Are there any friend requests sent to this user ?
-    // The user will confirm if he accepts or refuses the friend request.
-    if([friend_requests count] > 0)
-    {
-        self.friend_request = [friend_requests objectAtIndex:0];
-        NSString* message = [NSString stringWithFormat:@"%@ would like to add you as a friend.",[self.friend_request objectForKey:@"sender"]];
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-        alertView.tag = 1;
-        [alertView show];
-        return;
-    }
-
-    [self _check_new_messages];
-}
-
-// Check all messages with appropriate locations that user can receive.
-- (void) _check_new_messages
-{
-    // Get the current location of the user.
-    // The current location is checked and saved in LocationTracker,
-    // the location of simulator is faked to be easily debugged.
-    // To remove the fake location, please modify LocationTracker.m
-    LocationShareModel *model = [LocationShareModel sharedModel];
-    NSArray* locations = model.myLocationArray;
-    if(locations.count == 0) return;
-    NSDictionary* location_dic = [locations firstObject];
-    CLLocation *current_location = [[CLLocation alloc] initWithLatitude:[[location_dic objectForKey:@"latitude"] floatValue] longitude:[[location_dic objectForKey:@"longitude"] floatValue]];
-
-    // Check if there is any pending messages sent to the user.
-    PFQuery *query = [PFQuery queryWithClassName:@"message"];
-    [query whereKey:@"receiver" equalTo:self.userInfo.userName];
-    [query whereKey:@"status" equalTo:@"pending"];
-    NSArray *messages = [query findObjects];
-    if(messages.count == 0) return;
-    int message_received_count = 0;
-    for(PFObject *message in messages)
-    {
-        PFGeoPoint *point = [message objectForKey:@"location"];
-        CLLocation *message_location = [[CLLocation alloc] initWithLatitude:point.latitude longitude:point.longitude];
-        double message_radius = [[message objectForKey:@"radius"] doubleValue];
-        CLLocationDistance distance = [current_location distanceFromLocation:message_location];
-
-        // Is this message in the appropriate distance specified by the sender ?
-        if(distance < message_radius)
-        {
-            message_received_count++;
-            message[@"status"] = @"received";
-            [message save];
-        }
-    }
-
-    // Notify user of new messages if any.
-    if(message_received_count > 0)
-    {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"You have %d new messages",message_received_count] delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        alertView.tag = 0;
-        [alertView show];
-    }
 }
 
 #pragma mark - Navigation
@@ -420,36 +351,9 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
         return;
     }
 
-    // User touches on friend request alert view,
-    // system checks what buttons are touched.
     else if (alertView.tag ==1)
     {
-        // User accepts friend request,
-        // the friend relationship is about to be stored in cloud.
-        if (buttonIndex == 1)
-        {
-            // Inform the sender that this request has been accepted.
-//            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//                PFPush *push = [[PFPush alloc] init];
-//                NSDictionary *dataDict = @{@"type":@"response",@"sender":self.userInfo.userName};
-//                [push setChannels:@[self.namePushNotification]];
-//                [push setMessage:[NSString stringWithFormat:@"[%@] accept your request",self.userInfo.userName]];
-//                [push setData:dataDict];
-//                [push sendPushInBackground];
-//            });
-
-            self.friend_request[@"status"] = @"accepted";
-            [self.friend_request save];
-
-            [self loadData];
-        }
-
-        // User rejects the friend request,
-        // this action will be stored in cloud but the sender can send more request to this user.
-        else
-        {
-            [self.friend_request delete];
-        }
+        // Do nothing.
     }
 
     // User touch on send friend request alert view,
@@ -521,19 +425,24 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 {
     NSIndexPath *idxPath = [self.tableUserView indexPathForCell:sender];
     NSInteger row = [idxPath row];
-    NSMutableDictionary *contentSelect = [self.contactArray objectAtIndex:row];
-    BOOL Select = [[contentSelect valueForKey:@"isSelected"] boolValue];
-    if (Select) {
-        [contentSelect setValue:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
+    NSMutableDictionary *selected_row = [self.contactArray objectAtIndex:row];
+    BOOL is_selected = [[selected_row valueForKey:@"isSelected"] boolValue];
+    if (is_selected)
+    {
+        [selected_row setValue:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
     }
-    else{
-        [contentSelect setValue:[NSNumber numberWithBool:YES] forKey:@"isSelected"];
+    else
+    {
+        [selected_row setValue:[NSNumber numberWithBool:YES] forKey:@"isSelected"];
     }
-    [self.contactArray replaceObjectAtIndex:row withObject:contentSelect];
+
+    // Update the object with new info.
+    [self.contactArray replaceObjectAtIndex:row withObject:selected_row];
     [self.tableUserView reloadRowsAtIndexPaths:@[idxPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
-- (void)showMessage:(id)sender{
+- (void)showMessage:(id)sender
+{
     NSIndexPath *idxPath = [self.tableUserView indexPathForCell:sender];
     NSInteger row = [idxPath row];
     NSMutableDictionary *dict = [self.contactArray objectAtIndex:row];
@@ -552,7 +461,8 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     BBUserTableViewCell *cell = (id)[tableView dequeueReusableCellWithIdentifier:@"BBUserTableViewCell"];
-    if (cell == nil) {
+    if (cell == nil)
+    {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"BBUserTableViewCell" owner:nil options:nil]firstObject];
     }
     cell.delegate = self;

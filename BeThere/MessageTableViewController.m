@@ -35,6 +35,17 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]]];
+
+    [self load_data];
+
+    // Should reload list of messages when new messages are received.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(load_data)
+                                                 name:@"did_receive_new_messages" object:nil];
+}
+
+- (void) load_data
+{
     LoginInfo *userInfo = [LoginInfo sharedObject];
 
     PFQuery *query = [PFQuery queryWithClassName:@"message"];
