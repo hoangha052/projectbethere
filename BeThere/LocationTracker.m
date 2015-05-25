@@ -27,7 +27,7 @@
 @implementation CLLocationManager (Simulator)
 
 -(void)startUpdatingLocation {
-    CLLocation *powellsTech = [[CLLocation alloc] initWithLatitude:10.779163 longitude:106.689401];
+    CLLocation *powellsTech = [[CLLocation alloc] initWithLatitude:51.5123913 longitude:-0.0940652];
     [self.delegate locationManager:self didUpdateLocations:[[NSArray alloc] initWithObjects:powellsTech,nil]];
 }
 

@@ -10,4 +10,13 @@
 
 @interface MapViewController : UIViewController
 
+{
+//    NSMutableArray *pkButtons;
+}
+
+//Use UIButton as the sender type if you want
+//- (void)someMethod:(id)sender;
+
+// ... Other code can go here of course
+
 @end

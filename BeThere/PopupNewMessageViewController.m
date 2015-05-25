@@ -37,7 +37,8 @@
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]]];
     NSString *sender = [self.dicMessage objectForKey:@"sender"];
     NSString *image = [self.dicMessage objectForKey:@"imagename"];
-    self.lblTitle.text = [NSString stringWithFormat:@"You found something from [%@]. Take a look?",sender];
+    //add some code to display package name here
+    self.lblTitle.text = [NSString stringWithFormat:@"You found [%@] from [%@]. Take a look?",image,sender];
     self.imageView.image = [UIImage imageNamed:image];
 }
 

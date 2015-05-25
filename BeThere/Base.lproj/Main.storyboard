@@ -546,67 +546,6 @@
                                     <outlet property="delegate" destination="7Bp-5T-02p" id="cYG-yc-OO4"/>
                                 </connections>
                             </searchBar>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="huD-Mu-gHl">
-                                <rect key="frame" x="0.0" y="429" width="320" height="45"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pL8-xD-QoF">
-                                        <rect key="frame" x="35" y="8" width="30" height="30"/>
-                                        <color key="backgroundColor" red="1" green="0.99215686274509807" blue="0.84313725490196079" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" backgroundImage="pk1.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="selectedImage:" destination="7Bp-5T-02p" eventType="touchUpInside" id="AFg-fC-N75"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="1" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4n5-VR-Lpi">
-                                        <rect key="frame" x="80" y="8" width="30" height="30"/>
-                                        <state key="normal" backgroundImage="pk2.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="selectedImage:" destination="7Bp-5T-02p" eventType="touchUpInside" id="E0A-KE-NiL"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7b4-sB-gvp">
-                                        <rect key="frame" x="123" y="8" width="33" height="30"/>
-                                        <state key="normal" backgroundImage="pk3.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="selectedImage:" destination="7Bp-5T-02p" eventType="touchUpInside" id="fpb-AN-ztD"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SxU-YU-hwr">
-                                        <rect key="frame" x="169" y="8" width="30" height="30"/>
-                                        <state key="normal" backgroundImage="pk4.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="selectedImage:" destination="7Bp-5T-02p" eventType="touchUpInside" id="Wzr-W2-C9j"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WfN-Lb-8zB">
-                                        <rect key="frame" x="215" y="8" width="16" height="30"/>
-                                        <state key="normal" backgroundImage="symbol-5.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="selectedImage:" destination="7Bp-5T-02p" eventType="touchUpInside" id="7HW-u8-rpY"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vEz-xb-mLc">
-                                        <rect key="frame" x="247" y="8" width="30" height="30"/>
-                                        <state key="normal" backgroundImage="symbol-6.png">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="selectedImage:" destination="7Bp-5T-02p" eventType="touchUpInside" id="aRH-xq-w2C"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="1" green="0.99215686274509807" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FIZ-4W-XUf">
                                 <rect key="frame" x="0.0" y="499" width="93" height="69"/>
                                 <color key="backgroundColor" red="0.2470588235" green="0.2470588235" blue="0.23921568630000001" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
@@ -666,6 +605,10 @@
                                     <action selector="btnBetherePress:" destination="7Bp-5T-02p" eventType="touchUpInside" id="6xq-yL-tlg"/>
                                 </connections>
                             </button>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lP2-f0-GDu">
+                                <rect key="frame" x="0.0" y="434" width="320" height="45"/>
+                                <color key="backgroundColor" red="1" green="0.99215686270000003" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.81176470588235294" blue="0.25490196078431371" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
@@ -674,6 +617,7 @@
                     <size key="freeformSize" width="320" height="568"/>
                     <connections>
                         <outlet property="mapview" destination="yVX-Tb-hec" id="rSq-6d-1jJ"/>
+                        <outlet property="pkView" destination="lP2-f0-GDu" id="fAA-Qv-rNB"/>
                         <outlet property="radiusValueLabel" destination="yRc-du-tRF" id="csX-Ef-8gI"/>
                         <outlet property="radius_slider" destination="pBx-KL-fBp" id="8gR-zw-O2D"/>
                         <outlet property="searchBar" destination="NYj-pR-Q9W" id="mbz-P9-rUx"/>
@@ -754,12 +698,7 @@
         <image name="button-view-message.png" width="32" height="32"/>
         <image name="fluke-logo.png" width="117" height="195"/>
         <image name="icon-message-read.png" width="20" height="27"/>
-        <image name="pk1.png" width="150" height="150"/>
-        <image name="pk2.png" width="150" height="150"/>
         <image name="pk3.png" width="150" height="150"/>
-        <image name="pk4.png" width="150" height="150"/>
-        <image name="symbol-5.png" width="16" height="30"/>
-        <image name="symbol-6.png" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -767,6 +706,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="8pD-2L-rHY"/>
+        <segue reference="ZPi-LF-pQi"/>
     </inferredMetricsTieBreakers>
 </document>
