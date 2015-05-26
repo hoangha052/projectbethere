@@ -8,6 +8,8 @@
 
 @interface model_relationship : NSObject
 
-+ (BOOL) user:(NSString*) user1 friend_with:(NSString*) user2;
+- (BOOL) user:(NSString*) user1 friend_with:(NSString*) user2;
+- (NSString*) the_relationship_status;
+- (BOOL) is_friend;
 
 @end

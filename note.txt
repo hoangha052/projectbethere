@@ -1,0 +1,11 @@
+1. Duplicate contacts: add friend 1 người nhiều lần dc, sẽ hiện ra nhiều tên của người đó trong table.
+
+2. Delete contact: chưa có chỗ delete, anh thử add nút delete nhưng nó chỉ delete cái row trong table, ko có unfriend :))
+
+3. Add photo vô trong message. (add được video càng tốt)
+
+4. Select contact to send: làm sao để nhấn vô chỗ nào trên cái row cũng chọn dc.
+
+5. Chạy background khoảng 1ph thì bị log out
+
+6. nếu select contact có avatar riêng xong select Những contact để avatar defautl (con chim cánh cụt) thì con chim bị biến thành avatar của ng kia. (không có cách diễn đạt ngắn hơn =)) )
