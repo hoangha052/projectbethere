@@ -19,6 +19,7 @@
 #import "Blacklist.h"
 #import "Friends+Utils.h"
 #import "LocationShareModel.h"
+#import "model_relationship.h"
 
 //#import "ELCAlbumPickerController.h"
 
@@ -376,16 +377,30 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 //                [push sendPushInBackground];
 //            });
 
+            BOOL has_sent_friend_request = NO;
+
             PFQuery *query = [PFQuery queryWithClassName:@"Friends"];
             [query whereKey:@"sender" equalTo:self.userInfo.userName];
             [query whereKey:@"receiver" equalTo:name];
             PFObject* request = [query getFirstObject];
-            if(request != nil)
+            if(request != nil) has_sent_friend_request = YES;
+
+            query = [PFQuery queryWithClassName:@"Friends"];
+            [query whereKey:@"sender" equalTo:name];
+            [query whereKey:@"receiver" equalTo:self.userInfo.userName];
+            request = [query getFirstObject];
+            if(request != nil) has_sent_friend_request = YES;
+
+            if([model_relationship user:self.userInfo.userName friend_with:name])
             {
                 if([[request objectForKey:@"status"] isEqualToString:@"accepted"])
                 {
-
                     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"You have become friend with %@",name] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                    [alertView show];
+                }
+                else
+                {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"You have sent friend request to %@",name] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
                     [alertView show];
                 }
                 return;
