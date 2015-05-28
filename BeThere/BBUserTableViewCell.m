@@ -28,8 +28,20 @@
 
 - (void)awakeFromNib
 {
-    // Initialization code
-    
+    // Ensure when user taps anywhere in cell, the cell will response to user action.
+    UITapGestureRecognizer *singleFingerTap =
+            [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                    action:@selector(handleSingleTap:)];
+    [self.contentCellView addGestureRecognizer:singleFingerTap];
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+    CGPoint location = [recognizer locationInView:[recognizer.view superview]];
+
+    if ([self.delegate respondsToSelector:@selector(selectedCell:)]) {
+        [self.delegate selectedCell:self];
+    }
+
 }
 
 - (void)showIconMessage
