@@ -380,7 +380,7 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
             model_relationship *model = [[model_relationship alloc] init];
 
             // Check friend relationship before sending friend request.
-            if([model user:self.userInfo.userName friend_with:name])
+            if([model is_user:self.userInfo.userName friend_with:name])
             {
                 if([model is_friend])
                 {
@@ -478,16 +478,24 @@ UIActionSheetDelegate, UIImagePickerControllerDelegate
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-    BBUserTableViewCell *cell = (BBUserTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    if (cell.isSwipe) {
-        return NO;
-    }
-    return NO;
-//    return YES;
+//    BBUserTableViewCell *cell = (BBUserTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+//    if (cell.isSwipe) {
+//        return NO;
+//    }
+    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+
+        // Delete this relationship in parse server.
+        NSDictionary * current_row = [self.contactArray objectAtIndex:indexPath.row];
+        PFUser *user = [current_row objectForKey:@"user"];
+        model_relationship *m = [[model_relationship alloc] init];
+        [m unfriend_user:self.userInfo.userName and_user:[user objectForKey:@"username"]];
+
+        // Remove the row off contact list so that user can no longer send message to this contact.
         [self.contactArray removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation:UITableViewRowAnimationFade];

@@ -8,8 +8,11 @@
 
 @interface model_relationship : NSObject
 
-- (BOOL) user:(NSString*) user1 friend_with:(NSString*) user2;
+- (void) sync_relationship_between_user:(NSString*) user1 and_user:(NSString*) user2;
+- (BOOL) is_user:(NSString *)user1 friend_with:(NSString*) user2;
 - (NSString*) the_relationship_status;
 - (BOOL) is_friend;
+- (void) unfriend_user:(NSString *) user1 and_user:(NSString *) user2;
+- (void) clear_cache;
 
 @end
